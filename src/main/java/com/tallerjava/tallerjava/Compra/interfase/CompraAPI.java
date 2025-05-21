@@ -1,6 +1,6 @@
 package com.tallerjava.tallerjava.Compra.interfase;
 
-import com.tallerjava.tallerjava.Comercio.dominio.repositorio.Comercio;
+import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Compra.aplicacion.CompraService;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.DataTarjeta;

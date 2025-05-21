@@ -8,10 +8,10 @@
         <jta-data-source>java:jboss/datasources/MariaDBDS</jta-data-source>
 
 
-        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Comercio</class>
-        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Cuenta</class>
-        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.POS</class>
-        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Reclamo</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.Comercio</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.Cuenta</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.POS</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.Reclamo</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <!-- Propiedades de conexión MariaDB -->
@@ -31,7 +31,7 @@
 
     <persistence-unit name="CompraPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/MariaDBDS2</jta-data-source>
+        <jta-data-source>java:jboss/datasources/MariaDBDS</jta-data-source>
 
         <class>com.tallerjava.tallerjava.Compra.dominio.repositorio.Compra</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
