@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Stateless
 public class CompraService {
-    @PersistenceContext(unitName = "ComercioPU")
+    @PersistenceContext(unitName = "CompraPU")
     static EntityManager em;
     public static boolean enviarTransferencia(int monto, Date fecha, int idComercio, DataTarjeta tarjeta){
         Compra compra = new Compra();

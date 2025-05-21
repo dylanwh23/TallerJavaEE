@@ -2,10 +2,17 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
-             version="3.2">
+             version="3.1">
     <persistence-unit name="ComercioPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:jboss/datasources/MariaDBDS</jta-data-source>
+
+
+        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Comercio</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Cuenta</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.POS</class>
+        <class>com.tallerjava.tallerjava.Comercio.dominio.repositorio.Reclamo</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <!-- Propiedades de conexión MariaDB -->
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
@@ -21,4 +28,27 @@
 
         </properties>
     </persistence-unit>
+
+    <persistence-unit name="CompraPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/MariaDBDS2</jta-data-source>
+
+        <class>com.tallerjava.tallerjava.Compra.dominio.repositorio.Compra</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <!-- Propiedades de conexión MariaDB -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/compra"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!-- Propiedades de Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+        </properties>
+    </persistence-unit>
+
 </persistence>
