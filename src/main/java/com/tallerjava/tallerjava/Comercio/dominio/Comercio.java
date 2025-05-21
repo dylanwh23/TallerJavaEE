@@ -1,19 +1,26 @@
-package com.tallerjava.tallerjava.Comercio.dominio.repositorio;
+package com.tallerjava.tallerjava.Comercio.dominio;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
-@Table(name="comercio")
+@Table(name = "comercio", uniqueConstraints = @UniqueConstraint(columnNames = "correo"))
 public class Comercio {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
+    @NotEmpty
     private String nombre;
+    @NotEmpty
     private String telefono;
+    @NotEmpty
     private String correo;
+    @NotEmpty
     private String contrasenia;
-
+    @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<POS> pos = new ArrayList<>();
     public Comercio() {}
 
     public long getId() {
@@ -60,5 +67,22 @@ public class Comercio {
         this.id = id;
     }
 
+    public List<POS> getPos() {
+        return pos;
+    }
+
+    public void setPos(List<POS> pos) {
+        this.pos = pos;
+    }
+
+    public void addPos(POS pos) {
+        this.pos.add(pos);
+        pos.setComercio(this);
+    }
+
+    public void removePos(POS pos) {
+        this.pos.remove(pos);
+        pos.setComercio(null);
+    }
 
 }

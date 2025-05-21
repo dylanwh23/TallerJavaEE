@@ -1,4 +1,4 @@
-package com.tallerjava.tallerjava.Comercio.dominio.repositorio;
+package com.tallerjava.tallerjava.Comercio.dominio;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,14 +1,17 @@
-package com.tallerjava.tallerjava.Comercio.dominio.repositorio;
+package com.tallerjava.tallerjava.Comercio.dominio;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 @Entity
 public class Reclamo {
     @Id
-    int id;
-    String texto;
-    LocalDateTime fechaHora;
+    private int id;
+    private String texto;
+    private LocalDateTime fechaHora;
+    @ManyToOne
+    private Comercio comercio;
     public Reclamo(){}
 
     public int getId() {
@@ -33,5 +36,13 @@ public class Reclamo {
 
     public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
+    }
+
+    public Comercio getComercio() {
+        return comercio;
+    }
+
+    public void setComercio(Comercio comercio) {
+        this.comercio = comercio;
     }
 }
