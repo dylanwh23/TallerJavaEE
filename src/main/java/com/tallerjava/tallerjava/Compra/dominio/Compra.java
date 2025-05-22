@@ -1,10 +1,10 @@
-package com.tallerjava.tallerjava.Compra.dominio.repositorio;
+package com.tallerjava.tallerjava.Compra.dominio;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
-@Table(name="compra")
+@Table(name="Compra_compra")
 public class Compra {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -14,8 +14,9 @@ public class Compra {
     private DataTarjeta DataTarjeta;
     private int monto;
     private EnumEstadoCompra estado;
-    private Date fechaHora;
+    private Date fecha;
     private int idComercio;
+
 
     public long getId() {
         return id;
@@ -50,11 +51,11 @@ public class Compra {
     }
 
     public Date getFechaHora() {
-        return fechaHora;
+        return fecha;
     }
 
     public void setFechaHora(Date fechaHora) {
-        this.fechaHora = fechaHora;
+        this.fecha = fechaHora;
     }
 
     public int getIdComercio() {
