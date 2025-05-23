@@ -2,6 +2,7 @@ package com.tallerjava.tallerjava.Compra.infraestructura.persistencia;
 
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
+import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -92,6 +93,7 @@ public class CompraRepositoryImp implements CompraRepository {
 
 
     public void save(Compra compra){
+        compra.setEstado(EnumEstadoCompra.APROBADA);
         em.persist(compra);
     }
 
