@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface CompraInterface {
-    public boolean procesarPago(int monto, Date fecha, int idComercio, DataTarjeta tarjeta);
+    public boolean procesarPago(Compra compra);
     public List<Compra> resumenVentasDiarias(int idComercio);
     public List<Compra> resumenVentasPorPeriodo(int idComercio, Date fechaInicio, Date fechaFin);
     public float montoActualVendido(int idComercio);

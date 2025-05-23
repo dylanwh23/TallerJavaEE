@@ -48,12 +48,13 @@ public class CompraAPI {
     public void ventasPeriodo(int idComercio, Date fechaInicio, Date fechaFin) {
 
         List<Compra> ventasDiarias = compraService.resumenVentasPorPeriodo(idComercio, fechaInicio, fechaFin);
-
+         System.out.println("---------- RESUMEN DE VENTAS DEL PERIODO " + fechaFin + " - " + fechaFin +  "----------");
         for (Compra venta : ventasDiarias) {
-            System.out.println("---------- RESUMEN DE VENTAS DEL PERIODO " + fechaFin + " - " + fechaFin +  "----------");
+
             System.out.println("Precio:" + venta.getMonto());
             System.out.println("Fecha:" + venta.getFechaHora());
             System.out.println("Estado:" + venta.getEstado());
+            System.out.println("-------------------------------------------------------");
         }
 
 

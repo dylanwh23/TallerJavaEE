@@ -34,6 +34,7 @@
         <jta-data-source>java:jboss/datasources/MariaDBDS</jta-data-source>
 
         <class>com.tallerjava.tallerjava.Compra.dominio.Compra</class>
+        <class>com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <!-- Propiedades de conexión MariaDB -->

@@ -1,6 +1,9 @@
 package com.tallerjava.tallerjava.Compra.infraestructura.persistencia;
 
+import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
+import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
+import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.*;
 
@@ -10,36 +13,32 @@ import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
-public class CompraRepositoryImp {
+public class CompraRepositoryImp implements CompraRepository {
+
     @PersistenceContext(unitName = "CompraPU")
     private EntityManager em;
 
-
-    void save(Compra compra){
-        em.persist(compra);
-    }
-
-    public List<Compra> comprasPorPeriodo(Date fechaInicial, Date fechaFinal) {
+    @Override
+    public List<Compra> ventasPeriodo(int idComercio, Date fechaInicial, Date fechaFinal) {
         try {
             TypedQuery<Compra> query = em.createQuery(
                     "SELECT c FROM Compra c " +
-                            "WHERE c.fecha BETWEEN :fechaInicial AND :fechaFinal " +
+                            "WHERE c.fecha BETWEEN :fechaInicial AND :fechaFinal AND c.idComercio = :idComercio " +
                             "ORDER BY c.fecha ASC",
                     Compra.class);
             query.setParameter("fechaInicial", fechaInicial);
             query.setParameter("fechaFinal", fechaFinal);
-
-            List<Compra> compras = query.getResultList();
-            // Si no hay resultados, getResultList() devuelve lista vacía, no lanza excepción.
-            return compras;
+            query.setParameter("idComercio", idComercio);    // ← ¡No lo olvides!
+            return query.getResultList();
         } catch (PersistenceException e) {
-            // Por si hay algún error en la consulta
             e.printStackTrace();
             return Collections.emptyList();
         }
     }
 
-    public List<Compra> resumenVentasDiarias(int idComercio) {
+
+    @Override
+    public List<Compra> ventasDiarias(int idComercio) {
         // 1. Definimos el inicio del día (00:00:00.000)…
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -68,6 +67,36 @@ public class CompraRepositoryImp {
         // 4. Devolvemos la lista (vacía si no hay resultados)
         return query.getResultList();
     }
+
+    @Override
+    public float montoVendido(int idComercio) {
+        return 0;
+    }
+
+    @Override
+    public void aumentarMontoVendido(float monto, int idComercio) {
+
+            em.getTransaction().begin();
+
+            int filas = em.createQuery(
+                            "UPDATE MontoActualVendido m " +
+                                    "   SET m.monto = m.monto + :monto " +
+                                    " WHERE m.idComercio = :idComercio")
+                    .setParameter("monto", monto)
+                    .setParameter("idComercio", idComercio)
+                    .executeUpdate();
+
+            em.getTransaction().commit();
+
+    }
+
+
+    public void save(Compra compra){
+        em.persist(compra);
+    }
+
+
+
 
 
 
