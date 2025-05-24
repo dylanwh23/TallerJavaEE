@@ -6,11 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 public interface CompraRepository{
-    void save(Compra compra);
+    Compra procesarPago(Compra compra);
+    Compra save(Compra compra);
     List<Compra> ventasPeriodo(int idComerio, Date fechaInicial, Date fechaFinal);
     List<Compra> ventasDiarias(int idComercio);
-    float montoVendido(int idComercio);
-    void aumentarMontoVendido(float monto, int idComercio);
+    float montoActualVendido(int idComercio);
+    void aumentarMontoVendido(double monto, int idComercio);
 
 
 }

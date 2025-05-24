@@ -5,6 +5,7 @@ import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.*;
 
@@ -13,7 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@ApplicationScoped
+@Stateless
 public class CompraRepositoryImp implements CompraRepository {
 
     @PersistenceContext(unitName = "CompraPU")
@@ -70,31 +71,70 @@ public class CompraRepositoryImp implements CompraRepository {
     }
 
     @Override
-    public float montoVendido(int idComercio) {
-        return 0;
+    public float montoActualVendido(int idComercio) {
+        // Consulta directa al campo `monto` de la tabla de montos
+        TypedQuery<Double> q = em.createQuery(
+                "SELECT m.monto FROM MontoActualVendido m WHERE m.idComercio = :idComercio",
+                Double.class
+        );
+        q.setParameter("idComercio", idComercio);
+
+        Double resultado = null;
+        try {
+            resultado = q.getSingleResult();
+        } catch (NoResultException e) {
+            // Si no hay fila, devolvemos 0
+        }
+
+        return resultado != null ? resultado.floatValue() : 0.0f;
+    }
+
+    public void aumentarMontoVendido(double monto, int idComercio) {
+        em.createQuery(
+                        "UPDATE MontoActualVendido m " +
+                                "  SET m.monto = m.monto + :monto " +
+                                "WHERE m.idComercio = :idComercio"
+                )
+                .setParameter("monto", monto)
+                .setParameter("idComercio", idComercio)
+                .executeUpdate();
+    }
+
+
+    @Override
+    public Compra procesarPago(Compra compra) {
+        // 1) Persistimos la compra
+        em.persist(compra);
+
+        // 2) Buscamos el registro de montoActualVendido para este comercio
+        TypedQuery<MontoActualVendido> q =
+                em.createQuery(
+                        "SELECT m FROM MontoActualVendido m WHERE m.idComercio = :idComercio",
+                        MontoActualVendido.class);
+        q.setParameter("idComercio", compra.getIdComercio());
+        List<MontoActualVendido> lista = q.getResultList();
+
+        if (lista.isEmpty()) {
+            // No existía ninguno: lo creamos
+            MontoActualVendido nuevo = new MontoActualVendido();
+            nuevo.setIdComercio(compra.getIdComercio());
+            nuevo.setMonto(compra.getMonto());
+            em.persist(nuevo);
+        } else {
+            // Ya había uno: le sumamos el monto de la compra
+            MontoActualVendido existente = lista.get(0);
+            existente.setMonto(existente.getMonto() + compra.getMonto());
+            em.merge(existente);
+        }
+
+        // 3) Devolvemos la compra recién persistida (con su id generado)
+        return compra;
     }
 
     @Override
-    public void aumentarMontoVendido(float monto, int idComercio) {
-
-            em.getTransaction().begin();
-
-            int filas = em.createQuery(
-                            "UPDATE MontoActualVendido m " +
-                                    "   SET m.monto = m.monto + :monto " +
-                                    " WHERE m.idComercio = :idComercio")
-                    .setParameter("monto", monto)
-                    .setParameter("idComercio", idComercio)
-                    .executeUpdate();
-
-            em.getTransaction().commit();
-
-    }
-
-
-    public void save(Compra compra){
-        compra.setEstado(EnumEstadoCompra.APROBADA);
+    public Compra save(Compra compra) {
         em.persist(compra);
+        return compra;
     }
 
 

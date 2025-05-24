@@ -12,7 +12,9 @@ public class Compra {
     private long id;
     @Embedded
     private DataTarjeta DataTarjeta;
-    private int monto;
+    private double monto;
+
+    @Convert(converter = EstadoCompraConverter.class)
     private EnumEstadoCompra estado;
     private Date fecha;
     private int idComercio;
@@ -34,7 +36,7 @@ public class Compra {
         DataTarjeta = dataTarjeta;
     }
 
-    public int getMonto() {
+    public double getMonto() {
         return monto;
     }
 

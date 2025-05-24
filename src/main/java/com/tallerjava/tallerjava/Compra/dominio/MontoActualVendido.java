@@ -12,6 +12,19 @@ public class MontoActualVendido {
     private int idComercio;
 
 
+    public double getMonto() {
+        return monto;
+    }
 
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
 
+    public int getIdComercio() {
+        return idComercio;
+    }
+
+    public void setIdComercio(int idComercio) {
+        this.idComercio = idComercio;
+    }
 }
