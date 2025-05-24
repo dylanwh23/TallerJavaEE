@@ -55,7 +55,7 @@ public class CompraAPI {
 
         // 4) Lo envío al servicio, que persiste y devuelve la entidad
         System.out.println("---------- COMPRA PROCESADA ----------");
-        System.out.println("El id del compra es: " + idComercio);
+        System.out.println("El id del comercio es: " + idComercio);
         System.out.println("El monto del compra es: " + monto);
         System.out.println("El propietario del compra es: " + propietario);
         System.out.println("La fecha del compra es: " + venc);
