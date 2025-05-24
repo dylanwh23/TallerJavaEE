@@ -1,12 +1,9 @@
 package com.tallerjava.tallerjava.Compra.infraestructura.persistencia;
 
-import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
-import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.*;
 
 import java.util.Calendar;
@@ -17,7 +14,7 @@ import java.util.List;
 @Stateless
 public class CompraRepositoryImp implements CompraRepository {
 
-    @PersistenceContext(unitName = "CompraPU")
+    @PersistenceContext(unitName = "TallerPU")
     private EntityManager em;
 
     @Override
@@ -89,15 +86,23 @@ public class CompraRepositoryImp implements CompraRepository {
         return resultado != null ? resultado.floatValue() : 0.0f;
     }
 
-    public void aumentarMontoVendido(double monto, int idComercio) {
-        em.createQuery(
+    public int aumentarMontoVendido(double monto, int idComercio) {
+        return em.createQuery(
                         "UPDATE MontoActualVendido m " +
-                                "  SET m.monto = m.monto + :monto " +
-                                "WHERE m.idComercio = :idComercio"
+                                "   SET m.monto = m.monto + :monto " +
+                                " WHERE m.idComercio = :idComercio"
                 )
                 .setParameter("monto", monto)
                 .setParameter("idComercio", idComercio)
                 .executeUpdate();
+    }
+
+    @Override
+    public void crearMontoActualVendido(double monto, int idComercio) {
+        MontoActualVendido m = new MontoActualVendido();
+        m.setIdComercio(idComercio);
+        m.setMonto(monto);
+        em.persist(m);
     }
 
 

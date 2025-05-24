@@ -1,5 +1,4 @@
 package com.tallerjava.tallerjava.Comercio.infraestructura.persistencia;
-
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Comercio.dominio.POS;
 import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
@@ -8,21 +7,28 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import org.mindrot.jbcrypt.BCrypt;
 
 @ApplicationScoped
 public class ComercioRepositoryImp implements ComercioRepository {
-    @PersistenceContext(unitName = "ComercioPU")
+    @PersistenceContext(unitName = "TallerPU")
     private EntityManager em;
-
     @Override
-    public Comercio findComercioByCorreo(String correo, String contrasenia){
+    public Comercio findComercioByCorreo(String correo, String contraseña) {
         try {
-            return em.createQuery(
-                            "SELECT c FROM Comercio c WHERE c.correo = :correo AND c.contrasenia = :contrasenia",
+            // Recuperar el comercio por correo
+            Comercio comercio = em.createQuery(
+                            "SELECT c FROM Comercio c WHERE c.correo = :correo",
                             Comercio.class)
                     .setParameter("correo", correo)
-                    .setParameter("contrasenia", contrasenia)
                     .getSingleResult();
+
+            // Verificar la contraseña hasheada
+            if (BCrypt.checkpw(contraseña, comercio.getContrasenia())) {
+                return comercio; // Retornar el comercio si la contraseña es válida
+            } else {
+                return null; // Retornar null si la contraseña es incorrecta
+            }
         } catch (NoResultException e) {
             return null; // Devuelve null si no hay resultados
         }
@@ -57,6 +63,10 @@ public class ComercioRepositoryImp implements ComercioRepository {
     @Override
     public void saveReclamo(Reclamo reclamo){
         em.persist(reclamo);
+    }
+
+    public void setEm(EntityManager emm) {
+         em = emm;
     }
 
 }

@@ -2,9 +2,11 @@ package com.tallerjava.tallerjava.Comercio.dominio;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 @Entity
+@Table(name = "Comercio_Reclamo")
 public class Reclamo {
     @Id
     private int id;

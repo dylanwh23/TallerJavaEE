@@ -24,7 +24,11 @@ public class CompraService implements CompraInterface {
         compra.setEstado(EnumEstadoCompra.PROCESANDOSE);
         compra.setFechaHora(new Date());
         compraRepository.save(compra);
-        compraRepository.aumentarMontoVendido(compra.getMonto(), compra.getIdComercio());
+        int rows = compraRepository.aumentarMontoVendido(compra.getMonto(), compra.getIdComercio());
+        if (rows == 0) {
+            compraRepository.crearMontoActualVendido(compra.getMonto(),
+                    compra.getIdComercio());
+        }
         return compra;
     }
 

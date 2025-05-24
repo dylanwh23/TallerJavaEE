@@ -2,8 +2,11 @@ package com.tallerjava.tallerjava.Comercio.dominio;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(name = "Comercio_cuenta")
 public class Cuenta {
     @Id
     String numeroCuenta;

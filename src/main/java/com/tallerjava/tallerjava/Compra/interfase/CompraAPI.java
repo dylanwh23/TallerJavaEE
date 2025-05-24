@@ -35,25 +35,25 @@ public class CompraAPI {
             @QueryParam("numero")     int numero,
             @QueryParam("cvv")        int cvv,
             @QueryParam("propietario") String propietario,
-            @QueryParam("vencimiento") String vencimientoIso  // ISO8601, ej. 2025-05-30T18:43:45.000Z
+            @QueryParam("vencimiento") String vencimientoIso
     ) {
-        // 1) Parseo de la fecha de vencimiento
+
         Date venc = Date.from( Instant.parse(vencimientoIso) );
 
-        // 2) Creo el DataTarjeta
+
         DataTarjeta dt = new DataTarjeta();
         dt.setNumero(numero);
         dt.setCvv(cvv);
         dt.setPropietario(propietario);
         dt.setVencimiento(venc);
 
-        // 3) Armo la Compra
+
         Compra c = new Compra();
         c.setIdComercio(idComercio);
         c.setMonto((int) monto);
         c.setDataTarjeta(dt);
 
-        // 4) Lo envío al servicio, que persiste y devuelve la entidad
+
         System.out.println("---------- COMPRA PROCESADA ----------");
         System.out.println("El id del comercio es: " + idComercio);
         System.out.println("El monto del compra es: " + monto);
@@ -97,7 +97,7 @@ public class CompraAPI {
             @QueryParam("desde") String desde,     // “2025-05-01”
             @QueryParam("hasta") String hasta      // “2025-05-23”
     ) {
-        // parsear las fechas
+
         LocalDate ldDesde = LocalDate.parse(desde);
         LocalDate ldHasta = LocalDate.parse(hasta);
         Date fechaDesde = Date.from(ldDesde.atStartOfDay(ZoneId.systemDefault()).toInstant());
