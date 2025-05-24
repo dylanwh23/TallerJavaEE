@@ -84,3 +84,25 @@ Implementacion de Pasarela de Pagos
 ![{0C86C21A-F54F-4AB2-8D5B-63859FF3DFC3}](https://github.com/user-attachments/assets/c87e9676-b949-42dd-a860-beb536cef572)
 
 
+VENTAS DIARIAS:
+
+curl.exe -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/ventasDiarias?idComercio=1"
+
+
+VENTAS POR PERIODO:
+
+curl.exe "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/ventasPeriodo?idComercio=1&desde=2025-05-01&hasta=2025-05-23"
+
+
+MONTO ACTUAL VENDIDO:
+
+curl.exe -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/montoActualVendido?idComercio=1"
+
+
+
+PROCESAR PAGO:
+
+curl.exe --% -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/pago-simple?idComercio=1&monto=5400&numero=1232&cvv=143&propietario=Machi&vencimiento=2025-05-30T18:43:45.000Z"
+
+
+
