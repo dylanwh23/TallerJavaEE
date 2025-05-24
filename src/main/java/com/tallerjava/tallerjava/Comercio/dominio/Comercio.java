@@ -2,11 +2,12 @@ package com.tallerjava.tallerjava.Comercio.dominio;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
 @Entity
-@Table(name = "comercio", uniqueConstraints = @UniqueConstraint(columnNames = "correo"))
+@Table(name = "Comercio_comercio", uniqueConstraints = @UniqueConstraint(columnNames = "correo"))
 public class Comercio {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -60,9 +61,8 @@ public class Comercio {
     }
 
     public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+        this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt());
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -83,6 +83,9 @@ public class Comercio {
     public void removePos(POS pos) {
         this.pos.remove(pos);
         pos.setComercio(null);
+    }
+    public POS findPOS(int idPOS){
+        return pos.stream().filter(pos -> pos.getId() == idPOS).findFirst().orElse(null);
     }
 
 }
