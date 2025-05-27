@@ -6,6 +6,7 @@ import com.tallerjava.tallerjava.Compra.aplicacion.CompraInterface;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 
 import com.tallerjava.tallerjava.Compra.dominio.DataTarjeta;
+import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -55,6 +56,14 @@ public class CompraAPI {
         c.setIdComercio(idComercio);
         c.setMonto(monto.intValue());
         c.setDataTarjeta(dt);
+        c.setEstado(EnumEstadoCompra.PROCESANDOSE);
+
+        System.out.println("-------------- COMPRA PROCESADA --------------");
+
+        System.out.println("Id del comercio: " + c.getIdComercio());
+        System.out.println("Monto de la compra: " + c.getMonto());
+        System.out.println("Estado: " + c.getEstado());
+        System.out.println("----------------------------");
         return compraService.procesarPago(c);
     }
 
