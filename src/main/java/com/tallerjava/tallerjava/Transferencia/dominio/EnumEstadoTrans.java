@@ -1,4 +1,4 @@
-package com.tallerjava.tallerjava.Transferencia.dominio.repositorio;
+package com.tallerjava.tallerjava.Transferencia.dominio;
 
 public enum EnumEstadoTrans {
     PROCESADO, PROCESANDO, RECHAZADO

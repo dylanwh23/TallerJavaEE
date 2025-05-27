@@ -1,10 +1,10 @@
-package com.tallerjava.tallerjava.Transferencia.dominio.repositorio;
+package com.tallerjava.tallerjava.Transferencia.dominio;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "transferencia")
+@Table(name = "transferencia_transferencia")
 @Entity
 public class Transferencia {
     @Id
@@ -12,6 +12,7 @@ public class Transferencia {
     private long id;
     private EnumEstadoTrans estado;
     private int montoTransferencia;
+    private int montoTransferenciaComision;
     private LocalDateTime fechaHora;
     private int idComercio;
 
@@ -42,6 +43,15 @@ public class Transferencia {
         this.montoTransferencia = montoTransferencia;
     }
 
+    public int getMontoTransferenciaComision() {
+        return montoTransferenciaComision;
+    }
+
+    public void setMontoTransferenciaComision(int montoTransferenciaComision) {
+        int comision = (int) Math.round(montoTransferencia * 0.05); // 5 % de comision wacho
+        int montoNeto = montoTransferencia - comision;
+        this.montoTransferenciaComision = montoNeto;
+    }
     public LocalDateTime getFechaHora() {
         return fechaHora;
     }
