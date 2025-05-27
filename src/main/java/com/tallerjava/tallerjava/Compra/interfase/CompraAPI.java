@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,42 +27,37 @@ public class CompraAPI {
     @Inject
     private CompraInterface compraService;
 
-    @GET
-    @Path("/pago-simple")
+    @GET @Path("/pago-simple")
     @Produces(MediaType.APPLICATION_JSON)
     public Compra procesarPagoSimple(
-            @QueryParam("idComercio") int idComercio,
-            @QueryParam("monto")      double monto,
-            @QueryParam("numero")     int numero,
-            @QueryParam("cvv")        int cvv,
-            @QueryParam("propietario") String propietario,
-            @QueryParam("vencimiento") String vencimientoIso
+            @QueryParam("idComercio")    Integer idComercio,
+            @QueryParam("monto")         Double monto,
+            @QueryParam("numero")        Integer numero,
+            @QueryParam("cvv")           Integer cvv,
+            @QueryParam("propietario")   String propietario,
+            @QueryParam("vencimiento")   String vencimientoIso
     ) {
+        // 1) revisa que vengan todos
+        if (idComercio == null || monto == null || numero == null
+                || cvv == null || propietario == null || vencimientoIso == null) {
+            throw new BadRequestException("Faltan parámetros obligatorios para procesar el pago.");
+        }
+        // 2) revisa formato de fecha
+        Instant inst;
+        try {
+            inst = Instant.parse(vencimientoIso);
+        } catch (DateTimeParseException ex) {
+            throw new BadRequestException("Formato de fecha inválido: " + vencimientoIso);
+        }
 
-        Date venc = Date.from( Instant.parse(vencimientoIso) );
-
-
-        DataTarjeta dt = new DataTarjeta();
-        dt.setNumero(numero);
-        dt.setCvv(cvv);
-        dt.setPropietario(propietario);
-        dt.setVencimiento(venc);
-
-
+        DataTarjeta dt = new DataTarjeta( numero, cvv, Date.from(inst), propietario);
         Compra c = new Compra();
         c.setIdComercio(idComercio);
-        c.setMonto((int) monto);
+        c.setMonto(monto.intValue());
         c.setDataTarjeta(dt);
-
-
-        System.out.println("---------- COMPRA PROCESADA ----------");
-        System.out.println("El id del comercio es: " + idComercio);
-        System.out.println("El monto del compra es: " + monto);
-        System.out.println("El propietario del compra es: " + propietario);
-        System.out.println("La fecha del compra es: " + venc);
-        System.out.println("---------------------------------------------");
         return compraService.procesarPago(c);
     }
+
 
     @POST
     @Path("/pago")

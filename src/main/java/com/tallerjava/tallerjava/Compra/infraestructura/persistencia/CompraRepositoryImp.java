@@ -1,5 +1,6 @@
 package com.tallerjava.tallerjava.Compra.infraestructura.persistencia;
 
+import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
@@ -103,6 +104,20 @@ public class CompraRepositoryImp implements CompraRepository {
         m.setIdComercio(idComercio);
         m.setMonto(monto);
         em.persist(m);
+    }
+
+    @Override
+    public boolean findComercio(int idComercio) {
+        try {
+            em.createQuery(
+                            "SELECT c FROM Compra c WHERE c.idComercio = :idComercio",
+                            Comercio.class)
+                    .setParameter("idComercio", idComercio)
+                    .getSingleResult();
+            return true;
+        }catch (NoResultException e){
+            return false;
+        }
     }
 
 

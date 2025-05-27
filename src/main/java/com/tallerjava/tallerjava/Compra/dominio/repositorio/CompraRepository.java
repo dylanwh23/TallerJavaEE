@@ -13,6 +13,7 @@ public interface CompraRepository{
     float montoActualVendido(int idComercio);
     int aumentarMontoVendido(double monto, int idComercio);
     void crearMontoActualVendido(double monto, int idComercio);
+    boolean findComercio(int idComercio);
 
 
 }
