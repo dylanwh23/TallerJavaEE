@@ -3,6 +3,8 @@ package com.tallerjava.tallerjava.Transferencia.interfase;
 import com.tallerjava.tallerjava.Transferencia.aplicacion.TransferenciaInterfase;
 
 import com.tallerjava.tallerjava.Transferencia.dominio.Transferencia;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -13,7 +15,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ApplicationScoped
+@Path("/transferencia")
 public class TransferenciaAPI {
+
+    @Inject
     private TransferenciaInterfase transferenciaService;
     @GET
     @Produces(MediaType.APPLICATION_JSON)

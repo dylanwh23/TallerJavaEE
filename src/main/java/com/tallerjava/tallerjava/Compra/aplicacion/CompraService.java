@@ -3,6 +3,7 @@ package com.tallerjava.tallerjava.Compra.aplicacion;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
+import com.tallerjava.tallerjava.Transferencia.aplicacion.TransferenciaInterfase;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,6 +16,8 @@ import java.util.List;
 public class CompraService implements CompraInterface {
 
 
+    @Inject
+    private TransferenciaInterfase  transferenciaService;
 
     @Inject
     private CompraRepository compraRepository;
@@ -29,7 +32,9 @@ public class CompraService implements CompraInterface {
             compraRepository.crearMontoActualVendido(compra.getMonto(),
                     compra.getIdComercio());
         }
+        transferenciaService.recibirNotificacionTransferenciaDesdeMedioPago((int) compra.getMonto(),compra.getIdComercio());
         return compra;
+
     }
 
 
