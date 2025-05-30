@@ -28,7 +28,8 @@ public class CompraAPI {
     @Inject
     private CompraInterface compraService;
 
-    @GET @Path("/pago-simple")
+    @POST
+    @Path("/pago-simple")
     @Produces(MediaType.APPLICATION_JSON)
     public Compra procesarPagoSimple(
             @QueryParam("idComercio")    Integer idComercio,
@@ -58,13 +59,16 @@ public class CompraAPI {
         c.setDataTarjeta(dt);
         c.setEstado(EnumEstadoCompra.PROCESANDOSE);
 
-        System.out.println("-------------- COMPRA PROCESADA --------------");
+        c = compraService.procesarPago(c);
+
+        System.out.println("-------------- COMPRA --------------");
 
         System.out.println("Id del comercio: " + c.getIdComercio());
         System.out.println("Monto de la compra: " + c.getMonto());
         System.out.println("Estado: " + c.getEstado());
         System.out.println("----------------------------");
-        return compraService.procesarPago(c);
+
+        return c;
     }
 
 

@@ -21,7 +21,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
         // Si no, seguimos devolviendo 500:
         ex.printStackTrace();
         Map<String,String> body = Map.of(
-                "error", "Error interno del servidor"
+                "error", "Error interno del servidor, verifique los parametros de la solicitud"
         );
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
