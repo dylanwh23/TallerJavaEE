@@ -1,0 +1,119 @@
+#################################################################
+# Variables globales
+@host = localhost:8080
+@ctx  = TallerJavaEE-1.0-SNAPSHOT
+
+#################################################################
+### 1) Pago simple por query params
+
+### 1.1) Éxito → 200 OK
+GET http://{{host}}/{{ctx}}/api/compra/pago-simple?idComercio=1&monto=150&numero=1232&cvv=123&propietario=Matias&vencimiento=2025-05-30T18:43:45.000Z
+Accept: application/json
+
+> {
+  client.assert(response.status == 200, "Esperaba 200 OK");
+}
+
+### 1.2) Error (falta params) → 400 Bad Request
+GET http://{{host}}/{{ctx}}/api/compra/pago-simple?idComercio=1&monto=150
+Accept: application/json
+
+> {
+  client.assert(response.status == 400, "Esperaba 400 por falta de parámetros");
+}
+
+#################################################################
+### 2) Pago completo por JSON
+
+### 2.1) Éxito → 201 Created
+POST http://{{host}}/{{ctx}}/api/compra/pago
+Content-Type: application/json
+
+{
+  "idComercio": 1,
+  "monto": 250,
+  "dataTarjeta": {
+    "numero": 4321,
+    "cvv": 321,
+    "propietario": "Ana",
+    "vencimiento": "2025-05-30T18:43:45.000Z"
+  }
+}
+
+> {
+  client.assert(response.status == 201, "Esperaba 201 Created");
+  const body = JSON.parse(response.body);
+  client.assert(body.idComercio == 1, "idComercio debe ser 1");
+  client.assert(body.monto == 250,     "monto debe ser 250");
+}
+
+### 2.2) Error (JSON malformado) → 400 Bad Request
+POST http://{{host}}/{{ctx}}/api/compra/pago
+Content-Type: application/json
+
+{ "idComercio": "uno", "monto": "cien" }
+
+> {
+  client.assert(response.status == 400, "Esperaba 400 por JSON inválido");
+}
+
+#################################################################
+### 3) Ventas diarias
+
+### 3.1) Éxito → 200 OK
+GET http://{{host}}/{{ctx}}/api/compra/ventasDiarias?idComercio=1
+Accept: application/json
+
+> {
+  client.assert(response.status == 200, "Esperaba 200 OK");
+  const arr = JSON.parse(response.body);
+  client.assert(Array.isArray(arr), "Debe venir un array");
+}
+
+### 3.2) Error (sin idComercio) → 400 Bad Request
+GET http://{{host}}/{{ctx}}/api/compra/ventasDiarias
+Accept: application/json
+
+> {
+  client.assert(response.status == 400, "Esperaba 400 por falta de parámetro idComercio");
+}
+
+#################################################################
+### 4) Ventas por periodo
+
+### 4.1) Éxito → 200 OK
+GET http://{{host}}/{{ctx}}/api/compra/ventasPeriodo?idComercio=1&desde=2025-05-01&hasta=2025-05-23
+Accept: application/json
+
+> {
+  client.assert(response.status == 200, "Esperaba 200 OK");
+}
+
+### 4.2) Error (fecha inválida) → 400 Bad Request
+GET http://{{host}}/{{ctx}}/api/compra/ventasPeriodo?idComercio=1&desde=foo&hasta=bar
+Accept: application/json
+
+> {
+  client.assert(response.status == 400, "Esperaba 400 por formato de fecha inválido");
+}
+
+#################################################################
+### 5) Monto actual vendido
+
+### 5.1) Éxito → 200 OK
+GET http://{{host}}/{{ctx}}/api/compra/montoActualVendido?idComercio=1
+Accept: application/json
+
+> {
+  client.assert(response.status == 200, "Esperaba 200 OK");
+  const obj = JSON.parse(response.body);
+  client.assert("montoActualVendido" in obj, "Debe venir la clave montoActualVendido");
+}
+
+### 5.2) Error (sin idComercio) → 400 Bad Request
+GET http://{{host}}/{{ctx}}/api/compra/montoActualVendido
+Accept: application/json
+
+> {
+  client.assert(response.status == 400, "Esperaba 400 por falta de parámetro idComercio");
+}

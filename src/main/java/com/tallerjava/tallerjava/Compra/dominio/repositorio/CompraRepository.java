@@ -11,7 +11,9 @@ public interface CompraRepository{
     List<Compra> ventasPeriodo(int idComerio, Date fechaInicial, Date fechaFinal);
     List<Compra> ventasDiarias(int idComercio);
     float montoActualVendido(int idComercio);
-    void aumentarMontoVendido(double monto, int idComercio);
+    int aumentarMontoVendido(double monto, int idComercio);
+    void crearMontoActualVendido(double monto, int idComercio);
+    boolean findComercio(int idComercio);
 
 
 }

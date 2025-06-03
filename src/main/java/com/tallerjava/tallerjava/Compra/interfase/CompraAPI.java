@@ -6,6 +6,7 @@ import com.tallerjava.tallerjava.Compra.aplicacion.CompraInterface;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 
 import com.tallerjava.tallerjava.Compra.dominio.DataTarjeta;
+import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,42 +28,49 @@ public class CompraAPI {
     @Inject
     private CompraInterface compraService;
 
-    @GET
+    @POST
     @Path("/pago-simple")
     @Produces(MediaType.APPLICATION_JSON)
     public Compra procesarPagoSimple(
-            @QueryParam("idComercio") int idComercio,
-            @QueryParam("monto")      double monto,
-            @QueryParam("numero")     int numero,
-            @QueryParam("cvv")        int cvv,
-            @QueryParam("propietario") String propietario,
-            @QueryParam("vencimiento") String vencimientoIso  // ISO8601, ej. 2025-05-30T18:43:45.000Z
+            @QueryParam("idComercio")    Integer idComercio,
+            @QueryParam("monto")         Double monto,
+            @QueryParam("numero")        Integer numero,
+            @QueryParam("cvv")           Integer cvv,
+            @QueryParam("propietario")   String propietario,
+            @QueryParam("vencimiento")   String vencimientoIso
     ) {
-        // 1) Parseo de la fecha de vencimiento
-        Date venc = Date.from( Instant.parse(vencimientoIso) );
+        // 1) revisa que vengan todos
+        if (idComercio == null || monto == null || numero == null
+                || cvv == null || propietario == null || vencimientoIso == null) {
+            throw new BadRequestException("Faltan parámetros obligatorios para procesar el pago.");
+        }
+        // 2) revisa formato de fecha
+        Instant inst;
+        try {
+            inst = Instant.parse(vencimientoIso);
+        } catch (DateTimeParseException ex) {
+            throw new BadRequestException("Formato de fecha inválido: " + vencimientoIso);
+        }
 
-        // 2) Creo el DataTarjeta
-        DataTarjeta dt = new DataTarjeta();
-        dt.setNumero(numero);
-        dt.setCvv(cvv);
-        dt.setPropietario(propietario);
-        dt.setVencimiento(venc);
-
-        // 3) Armo la Compra
+        DataTarjeta dt = new DataTarjeta( numero, cvv, Date.from(inst), propietario);
         Compra c = new Compra();
         c.setIdComercio(idComercio);
-        c.setMonto((int) monto);
+        c.setMonto(monto.intValue());
         c.setDataTarjeta(dt);
+        c.setEstado(EnumEstadoCompra.PROCESANDOSE);
 
-        // 4) Lo envío al servicio, que persiste y devuelve la entidad
-        System.out.println("---------- COMPRA PROCESADA ----------");
-        System.out.println("El id del comercio es: " + idComercio);
-        System.out.println("El monto del compra es: " + monto);
-        System.out.println("El propietario del compra es: " + propietario);
-        System.out.println("La fecha del compra es: " + venc);
-        System.out.println("---------------------------------------------");
-        return compraService.procesarPago(c);
+        c = compraService.procesarPago(c);
+
+        System.out.println("-------------- COMPRA --------------");
+
+        System.out.println("Id del comercio: " + c.getIdComercio());
+        System.out.println("Monto de la compra: " + c.getMonto());
+        System.out.println("Estado: " + c.getEstado());
+        System.out.println("----------------------------");
+
+        return c;
     }
+
 
     @POST
     @Path("/pago")
@@ -97,7 +106,7 @@ public class CompraAPI {
             @QueryParam("desde") String desde,     // “2025-05-01”
             @QueryParam("hasta") String hasta      // “2025-05-23”
     ) {
-        // parsear las fechas
+
         LocalDate ldDesde = LocalDate.parse(desde);
         LocalDate ldHasta = LocalDate.parse(hasta);
         Date fechaDesde = Date.from(ldDesde.atStartOfDay(ZoneId.systemDefault()).toInstant());
