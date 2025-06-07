@@ -1,5 +1,6 @@
 import com.tallerjava.tallerjava.Comercio.dominio.POS;
 import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -9,7 +10,6 @@ import jakarta.ws.rs.core.Response;
 import com.tallerjava.tallerjava.Comercio.interfase.ComercioAPI;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
-import com.tallerjava.tallerjava.Comercio.interfase.Requests.AgregarPosRequest;
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Comercio.infraestructura.persistencia.ComercioRepositoryImp;
 import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioService;
@@ -68,10 +68,10 @@ class ComercioIntegrationTest {
         comercio.setCorreo("contacto@comerciodemo.com");
         comercio.setTelefono("123456789");
         comercio.setContrasenia("securepassword");
-        
+
         // Usar API para registrar
         comercioAPI.registroComercio(comercio);
-        
+
         em.flush(); // Forzar persistencia
 
         Comercio savedComercio = em.createQuery(
@@ -95,14 +95,19 @@ class ComercioIntegrationTest {
 
         em.flush(); // Persistir datos iniciales
 
+        // Crear el request de autenticación
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.setCorreo("original@test.com");
+        authRequest.setContrasenia("password123");
+
         // Crear el request de modificación
         ModificarComercioRequest modificarRequest = new ModificarComercioRequest();
         modificarRequest.setNombre("Nuevo Nombre");
         modificarRequest.setTelefono("987654321");
-        modificarRequest.setCorreo("original@test.com");
-        modificarRequest.setContrasenia("password123");
+        modificarRequest.setNuevoCorreo("original@test.com");
+        modificarRequest.setNuevaContrasenia("password123");
 
-        Response response = comercioAPI.modificarComercio(modificarRequest);
+        Response response = comercioAPI.modificarComercio(authRequest, modificarRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
@@ -129,7 +134,7 @@ class ComercioIntegrationTest {
         em.flush(); // Persistir datos iniciales
 
         // Crear el request de agregar POS
-        AgregarPosRequest agregarPosRequest = new AgregarPosRequest();
+        AuthRequest agregarPosRequest = new AuthRequest();
         agregarPosRequest.setCorreo("pos@test.com");
         agregarPosRequest.setContrasenia("password123");
 
@@ -159,13 +164,16 @@ class ComercioIntegrationTest {
 
         em.flush(); // Persistir datos iniciales
 
-        // Crear el request del reclamo
+        // Crear el request de autenticación
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.setCorreo("reclamo@test.com");
+        authRequest.setContrasenia("password123");
+
+        // Crear el request del reclamo (solo con texto)
         ReclamoRequest reclamoRequest = new ReclamoRequest();
-        reclamoRequest.setCorreo("reclamo@test.com");
-        reclamoRequest.setContrasenia("password123");
         reclamoRequest.setTexto("Este es un reclamo de prueba");
 
-        Response response = comercioAPI.realizarReclamo(reclamoRequest);
+        Response response = comercioAPI.realizarReclamo(authRequest, reclamoRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
@@ -192,9 +200,10 @@ class ComercioIntegrationTest {
         em.flush(); // Asegurar persistencia inicial
 
         // Paso 2: Agregar un POS al comercio
-        AgregarPosRequest agregarPosRequest = new AgregarPosRequest();
+        AuthRequest agregarPosRequest = new AuthRequest();
         agregarPosRequest.setCorreo("estado@test.com");
         agregarPosRequest.setContrasenia("password123");
+
         Response agregarPosResponse = comercioAPI.agregarPos(agregarPosRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), agregarPosResponse.getStatus()); // Verificar éxito al agregar POS
@@ -203,7 +212,7 @@ class ComercioIntegrationTest {
 
         // Obtener el ID del POS agregado (ID generado automáticamente)
         Comercio comercioConPOS = em.createQuery(
-                "SELECT c FROM Comercio c WHERE c.correo = :correo", Comercio.class)
+                        "SELECT c FROM Comercio c WHERE c.correo = :correo", Comercio.class)
                 .setParameter("correo", "estado@test.com")
                 .getSingleResult();
 
@@ -214,14 +223,17 @@ class ComercioIntegrationTest {
         Boolean estadoInicial = comercioConPOS.getPos().get(0).getEstado();
         assertTrue(estadoInicial); // Verificar que el POS está inicialmente activo
 
-        // Paso 3: Cambiar el estado del POS a inactivo (false)
+        // Paso 3: Crear el request de autenticación
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.setCorreo("estado@test.com");
+        authRequest.setContrasenia("password123");
+
+        // Paso 4: Cambiar el estado del POS a inactivo (false)
         cambiarEstadoPosRequest cambiarEstadoRequest = new cambiarEstadoPosRequest();
-        cambiarEstadoRequest.setCorreoComercio("estado@test.com");
-        cambiarEstadoRequest.setContraseñaComercio("password123");
         cambiarEstadoRequest.setIdPOS(idPOS);
         cambiarEstadoRequest.setEstado(false);
 
-        Response cambiarEstadoResponse = comercioAPI.cambiarEstadoPOS(cambiarEstadoRequest);
+        Response cambiarEstadoResponse = comercioAPI.cambiarEstadoPOS(authRequest, cambiarEstadoRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), cambiarEstadoResponse.getStatus()); // Verificar éxito en la solicitud
 
@@ -229,7 +241,7 @@ class ComercioIntegrationTest {
 
         // Verificar que el estado del POS ha cambiado en la base de datos
         Comercio comercioActualizado = em.createQuery(
-                "SELECT c FROM Comercio c WHERE c.correo = :correo", Comercio.class)
+                        "SELECT c FROM Comercio c WHERE c.correo = :correo", Comercio.class)
                 .setParameter("correo", "estado@test.com")
                 .getSingleResult();
 
@@ -239,5 +251,4 @@ class ComercioIntegrationTest {
         POS posActualizado = comercioActualizado.getPos().get(0);
         assertFalse(posActualizado.getEstado()); // Verificar que el estado ahora es inactivo
     }
-
 }

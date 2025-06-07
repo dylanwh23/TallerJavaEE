@@ -1,26 +1,12 @@
 package com.tallerjava.tallerjava.Comercio.interfase.Requests;
 
-public class cambiarEstadoPosRequest {
-    String correoComercio;
-    String contraseñaComercio;
+import jakarta.validation.constraints.NotBlank;
+
+public class cambiarEstadoPosRequest{
+    @NotBlank(message = "El id del POS es obligatorio")
     int idPOS;
+    @NotBlank(message = "El estado del POS es obligatorio")
     boolean estado;
-
-    public String getCorreoComercio() {
-        return correoComercio;
-    }
-
-    public void setCorreoComercio(String correoComercio) {
-        this.correoComercio = correoComercio;
-    }
-
-    public String getContraseñaComercio() {
-        return contraseñaComercio;
-    }
-
-    public void setContraseñaComercio(String contraseñaComercio) {
-        this.contraseñaComercio = contraseñaComercio;
-    }
 
     public int getIdPOS() {
         return idPOS;
