@@ -1,0 +1,51 @@
+### 1. Registrar un nuevo comercio
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/registro
+Content-Type: application/json
+
+{
+  "nombre": "Cafetería Aroma",
+  "telefono": "099123456",
+  "correo": "info@cafeteriaaroma.com",
+  "contrasenia": "cafe123"
+}
+
+<> 2025-06-04T005601.500.json
+
+### 2. Agregar un POS a un comercio existente (usando QueryParams)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/agregarPOS?c=info@cafeteriaaroma.com&p=cafe123
+
+<> 2025-06-04T005601.200.octet-stream
+
+### 3. Registrar un reclamo (usando QueryParams para autenticación)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/reclamo?c=info@cafeteriaaroma.com&p=cafe123
+Content-Type: application/json
+
+{
+  "texto": "El dispositivo POS presenta errores al procesar pagos con tarjetas de crédito internacionales."
+}
+
+<> 2025-06-04T005602.200.octet-stream
+
+### 4. Modificar datos de un comercio (usando QueryParams para autenticación)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/modificar?c=info@cafeteriaaroma.com&p=cafe123
+Content-Type: application/json
+
+{
+  "nombre": "Cafetería Aroma Premium",
+  "telefono": "099123457",
+  "nuevoCorreo": "contacto@cafeteriaaroma.com",
+  "nuevaContrasenia": "cafe456"
+}
+
+<> 2025-06-04T005602-1.200.octet-stream
+
+### 5. Cambiar estado de un POS (usando QueryParams para autenticación)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/cambiarEstadoPOS?c=contacto@cafeteriaaroma.com&p=cafe456
+Content-Type: application/json
+
+{
+  "idPOS": 1,
+  "estado": false
+}
+
+<> 2025-06-04T005602-2.200.octet-stream

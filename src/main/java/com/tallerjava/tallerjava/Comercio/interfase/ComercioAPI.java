@@ -2,16 +2,14 @@ package com.tallerjava.tallerjava.Comercio.interfase;
 
 import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioInterface;
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
-import com.tallerjava.tallerjava.Comercio.interfase.Requests.AgregarPosRequest;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -34,24 +32,22 @@ public class ComercioAPI {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/agregarPOS")
-    public Response agregarPos(@Valid AgregarPosRequest request) {
+    public Response agregarPos(@BeanParam @Valid AuthRequest auth) {
         try{
-            comercioService.agregarPos(request.getCorreo(), request.getContrasenia());
+            comercioService.agregarPos(auth.getCorreo(), auth.getContrasenia());
             return Response.status(Response.Status.OK).entity("POS agregado satisfactoriamente.").build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/reclamo")
-    public Response realizarReclamo(ReclamoRequest request){
+    public Response realizarReclamo(@BeanParam @Valid AuthRequest auth, ReclamoRequest request){
         try{
-            comercioService.realizarReclamo(request.getCorreo(), request.getContrasenia(), request.getTexto());
+            comercioService.realizarReclamo(auth.getCorreo(), auth.getContrasenia(), request.getTexto());
             return Response.status(Response.Status.OK).entity("Reclamo realizado satisfactoriamente.").build();
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -61,13 +57,13 @@ public class ComercioAPI {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/modificar")
-    public Response modificarComercio(@Valid ModificarComercioRequest request) {
+    public Response modificarComercio(@BeanParam @Valid AuthRequest auth, ModificarComercioRequest request) {
         try{
             comercioService.modificarDatosComercio(
                     request.getNombre(),
                     request.getTelefono(),
-                    request.getCorreo(),
-                    request.getContrasenia(),
+                    auth.getCorreo(),
+                    auth.getContrasenia(),
                     request.getNuevoCorreo(),
                     request.getNuevaContrasenia()
             );
@@ -80,14 +76,15 @@ public class ComercioAPI {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/cambiarEstadoPOS")
-    public Response cambiarEstadoPOS(cambiarEstadoPosRequest request){
+    public Response cambiarEstadoPOS(@BeanParam @Valid AuthRequest auth, cambiarEstadoPosRequest request){
         try{
-            comercioService.cambiarEstadoPOS(request.getCorreoComercio(), request.getContraseñaComercio(), request.getIdPOS(), request.isEstado());
+            comercioService.cambiarEstadoPOS(auth.getCorreo(), auth.getContrasenia(), request.getIdPOS(), request.isEstado());
             return Response.status(Response.Status.OK).entity("Estado del POS modificado satisfactoriamente.").build();
         }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
+
     public void setComercioService(ComercioInterface comercioService) {
         this.comercioService = comercioService;
     }
