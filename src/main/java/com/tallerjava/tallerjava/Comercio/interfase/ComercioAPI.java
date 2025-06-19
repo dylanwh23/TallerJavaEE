@@ -2,6 +2,10 @@ package com.tallerjava.tallerjava.Comercio.interfase;
 
 import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioInterface;
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.AgregarPosRequest;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
+import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -20,156 +24,71 @@ public class ComercioAPI {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registro")
-    public void registroComercio(@Valid Comercio comercio) {
-        comercioService.altaComercio(comercio);
+    public Response registroComercio(@Valid Comercio comercio) {
+        try {
+            comercioService.altaComercio(comercio);
+            return Response.status(Response.Status.OK).entity("Registro satisfactorio.").build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/agregarPOS")
     public Response agregarPos(@Valid AgregarPosRequest request) {
-        System.out.println("Correo recibido: " + request.getCorreo());
-        System.out.println("Contraseña recibida: " + request.getContrasenia());
-
-        comercioService.agregarPos(request.getCorreo(), request.getContrasenia());
-
-        return Response.status(Response.Status.OK).entity("POS agregado satisfactoriamente.").build();
-    }
-
-    public static class AgregarPosRequest {
-        private String correo;
-        private String contrasenia;
-
-        // Getters y Setters
-        public String getCorreo() {
-            return correo;
-        }
-
-        public void setCorreo(String correo) {
-            this.correo = correo;
-        }
-
-        public String getContrasenia() {
-            return contrasenia;
-        }
-
-        public void setContrasenia(String contrasenia) {
-            this.contrasenia = contrasenia;
+        try{
+            comercioService.agregarPos(request.getCorreo(), request.getContrasenia());
+            return Response.status(Response.Status.OK).entity("POS agregado satisfactoriamente.").build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
+
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/reclamo")
-    public void realizarReclamo(ReclamoRequest request){
-        comercioService.realizarReclamo(request.getCorreo(), request.getContrasenia(), request.getTexto());
-    }
-    public static class ReclamoRequest {
-        private String correo;
-        private String contrasenia;
-        private String texto;
-
-        public String getCorreo() {
-            return correo;
-        }
-
-        public void setCorreo(String correo) {
-            this.correo = correo;
-        }
-
-        public String getContrasenia() {
-            return contrasenia;
-        }
-
-        public void setContrasenia(String contrasenia) {
-            this.contrasenia = contrasenia;
-        }
-
-        public String getTexto() {
-            return texto;
-        }
-
-        public void setTexto(String texto) {
-            this.texto = texto;
+    public Response realizarReclamo(ReclamoRequest request){
+        try{
+            comercioService.realizarReclamo(request.getCorreo(), request.getContrasenia(), request.getTexto());
+            return Response.status(Response.Status.OK).entity("Reclamo realizado satisfactoriamente.").build();
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
     }
 
-    //modificarComercio
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/modificar")
-    public void modificarComercio(ModificarComercioRequest request) {
-        comercioService.modificarDatosComercio(
-                request.getNombre(),
-                request.getTelefono(),
-                request.getCorreo(),
-                request.getContrasenia(),
-                request.getNuevoCorreo(),
-                request.getNuevaContrasenia()
-        );
-    }
-
-    protected static class ModificarComercioRequest {
-        protected String nombre;
-        protected String telefono;
-        protected String correo;
-        protected String contrasenia;
-        protected String nuevoCorreo;
-        protected String nuevaContrasenia;
-
-        public ModificarComercioRequest() {
-        }
-
-
-        //getters y setters
-        public String getNombre() {
-            return nombre;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-
-        public String getTelefono() {
-            return telefono;
-        }
-
-        public void setTelefono(String telefono) {
-            this.telefono = telefono;
-        }
-
-        public String getCorreo() {
-            return correo;
-        }
-
-        public void setCorreo(String correo) {
-            this.correo = correo;
-        }
-
-        public String getContrasenia() {
-            return contrasenia;
-        }
-
-        public void setContrasenia(String contrasenia) {
-            this.contrasenia = contrasenia;
-        }
-
-        public String getNuevoCorreo() {
-            return nuevoCorreo;
-        }
-
-        public void setNuevoCorreo(String nuevoCorreo) {
-            this.nuevoCorreo = nuevoCorreo;
-        }
-
-        public String getNuevaContrasenia() {
-            return nuevaContrasenia;
-        }
-
-        public void setNuevaContrasenia(String nuevaContrasenia) {
-            this.nuevaContrasenia = nuevaContrasenia;
+    public Response modificarComercio(@Valid ModificarComercioRequest request) {
+        try{
+            comercioService.modificarDatosComercio(
+                    request.getNombre(),
+                    request.getTelefono(),
+                    request.getCorreo(),
+                    request.getContrasenia(),
+                    request.getNuevoCorreo(),
+                    request.getNuevaContrasenia()
+            );
+            return Response.status(Response.Status.OK).entity("Datos modificados satisfactoriamente.").build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
-    // fin
 
-
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/cambiarEstadoPOS")
+    public Response cambiarEstadoPOS(cambiarEstadoPosRequest request){
+        try{
+            comercioService.cambiarEstadoPOS(request.getCorreoComercio(), request.getContraseñaComercio(), request.getIdPOS(), request.isEstado());
+            return Response.status(Response.Status.OK).entity("Estado del POS modificado satisfactoriamente.").build();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+    public void setComercioService(ComercioInterface comercioService) {
+        this.comercioService = comercioService;
+    }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.ws.rs.DefaultValue;
 
 @Entity
+@Table(name = "Comercio_POS")
 public class POS {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

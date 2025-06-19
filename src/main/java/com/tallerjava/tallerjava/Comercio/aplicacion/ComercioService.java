@@ -6,16 +6,15 @@ import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
 import com.tallerjava.tallerjava.Comercio.dominio.repositorio.ComercioRepository;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
+
+
 
 @Stateless
 public class ComercioService implements ComercioInterface{
 
 
     @Inject
-    private ComercioRepository comercioRepository;
+    public ComercioRepository comercioRepository;
 
 
     public void altaComercio(Comercio comercio) {
@@ -59,18 +58,30 @@ public class ComercioService implements ComercioInterface{
 
     public void agregarPos(String correoComercio, String contraseñaComercio){
         Comercio comercio = comercioRepository.findComercioByCorreo(correoComercio, contraseñaComercio);
-        POS pos = new POS();
-        pos.setEstado(true);
-        pos.setComercio(comercio);
-        comercio.addPos(pos);
-        comercioRepository.merge(comercio);
+        if(comercio == null){
+            throw new SecurityException("Comercio no encontrado. Intente de nuevo con los datos correctos.");
+        }else{
+            POS pos = new POS();
+            pos.setEstado(true);
+            pos.setComercio(comercio);
+            comercio.addPos(pos);
+            comercioRepository.merge(comercio);
+        }
     }
 
     public void cambiarEstadoPOS(String correoComercio, String contraseñaComercio, int idPOS, boolean estado){
         Comercio comercio = comercioRepository.findComercioByCorreo(correoComercio, contraseñaComercio);
-        POS pos = comercio.getPos().get(idPOS);
-        pos.setEstado(estado);
-        comercioRepository.mergePos(pos);
+        if(comercio == null){
+            throw new SecurityException("Comercio no encontrado. Intente de nuevo con los datos correctos.");
+        }else{
+            POS pos = comercio.findPOS(idPOS);
+            if(pos == null){
+                throw new IllegalArgumentException("El ID del POS no existe en el comercio.");
+            }else{
+                pos.setEstado(estado);
+                comercioRepository.mergePos(pos);
+            }
+        }
     }
 
     public void realizarReclamo(String correoComercio, String constraseñaComercio, String texto){
@@ -80,12 +91,16 @@ public class ComercioService implements ComercioInterface{
 
         if(comercio == null){
             throw new SecurityException("Comercio no encontrado. Intente de nuevo con los datos correctos.");
-        }else{
+        } else if (texto.isEmpty()) {
+            throw new IllegalArgumentException("No hay contenido");
+        } else{
             reclamo.setComercio(comercio);
             reclamo.setTexto(texto);
             reclamo.setFechaHora(java.time.LocalDateTime.now());
             comercioRepository.saveReclamo(reclamo);
         }
     }
+
+
 
 }
