@@ -3,6 +3,7 @@ package com.tallerjava.tallerjava.Compra.aplicacion;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
+import com.tallerjava.tallerjava.Compra.interfase.RateLimiter;
 import com.tallerjava.tallerjava.Transferencia.aplicacion.TransferenciaInterfase;
 import com.tallerjava.tallerjava.Transferencia.aplicacion.TransferenciaService;
 import com.tallerjava.tallerjava.Transferencia.dominio.repositorio.TransferenciaRepository;
@@ -12,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -40,6 +42,11 @@ public class CompraService implements CompraInterface {
 
     @Override
     public Compra procesarPago(Compra compra) {
+
+
+        if (!RateLimiter.tryConsume()) {
+            throw new WebApplicationException("Rate limit alcanzado", Response.Status.TOO_MANY_REQUESTS);
+        }
         // --- validaciones iniciales ---
         if (compra == null) {
             throw new BadRequestException("La solicitud de pago no puede estar vacía.");
@@ -53,7 +60,6 @@ public class CompraService implements CompraInterface {
         if (compra.getDataTarjeta() == null) {
             throw new BadRequestException("Los datos de la tarjeta son obligatorios.");
         }
-        // podrías añadir más validaciones sobre número, cvv, etc.
 
         // --- procesamiento ---
         compra.setFechaHora(new Date());
