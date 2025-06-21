@@ -92,6 +92,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-java</artifactId>
+            <version>6.11.0</version>
+        </dependency>
+
 
 
 
