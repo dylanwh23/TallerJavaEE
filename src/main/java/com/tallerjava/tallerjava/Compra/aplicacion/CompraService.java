@@ -1,5 +1,5 @@
 package com.tallerjava.tallerjava.Compra.aplicacion;
-
+import com.tallerjava.tallerjava.Monitoreo.aplicacion.MonitoreoInterface;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
@@ -36,6 +36,9 @@ public class CompraService implements CompraInterface {
 
     @Inject
     private TransferenciaInterfase  transferenciaService;
+
+    @Inject
+    private MonitoreoInterface monitoreo;
 
 
     @Override
@@ -86,6 +89,7 @@ public class CompraService implements CompraInterface {
                         if (transferenciaService.recibirNotificacionTransferenciaDesdeMedioPago((int) compra.getMonto(),compra.getIdComercio())) {
                             compra.setEstado(EnumEstadoCompra.APROBADA);
                             compraRepository.save(compra);
+                            monitoreo.notificarPagoOk();
                             int rows = compraRepository.aumentarMontoVendido(compra.getMonto(), compra.getIdComercio());
                             if (rows == 0) {
 
@@ -97,12 +101,14 @@ public class CompraService implements CompraInterface {
                             System.out.println("-------------- COMPRA RECHAZADA POR TRANSFERENCIA "+responseCode+" --------------");
                             compra.setEstado(EnumEstadoCompra.DESAPROBADA);
                             compraRepository.save(compra);
+                            monitoreo.notificarPagoError();
                         }
 
                     }else{
                         System.out.println("-------------- COMPRA RECHAZADA POR MEDIO DE PAGO"+responseCode+" --------------");
                         compra.setEstado(EnumEstadoCompra.DESAPROBADA);
                         compraRepository.save(compra);
+                        monitoreo.notificarPagoError();
                     }
 
 
@@ -112,6 +118,7 @@ public class CompraService implements CompraInterface {
                 System.out.println("-------------- COMPRA RECHAZADA POR ERROR DE RED"+responseCode+" --------------");
                 compra.setEstado(EnumEstadoCompra.DESAPROBADA);
                 compraRepository.save(compra);
+                monitoreo.notificarPagoError();
 
             }
 
@@ -120,6 +127,7 @@ public class CompraService implements CompraInterface {
             System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / prende el bancpo tarad--------------");
             compra.setEstado(EnumEstadoCompra.DESAPROBADA);
             compraRepository.save(compra);
+            monitoreo.notificarPagoError();
 
         }
 
