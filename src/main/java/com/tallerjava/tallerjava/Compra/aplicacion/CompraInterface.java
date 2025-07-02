@@ -1,7 +1,7 @@
 package com.tallerjava.tallerjava.Compra.aplicacion;
 
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
-import com.tallerjava.tallerjava.Compra.dominio.DataTarjeta;
+import com.tallerjava.tallerjava.Compra.dominio.repositorio.DataTarjeta;
 
 import java.util.Date;
 import java.util.List;

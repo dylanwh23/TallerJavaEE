@@ -1,4 +1,5 @@
 package com.tallerjava.tallerjava.Compra.dominio;
+import com.tallerjava.tallerjava.Compra.dominio.repositorio.DataTarjeta;
 import jakarta.persistence.*;
 
 import java.util.Date;

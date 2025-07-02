@@ -5,7 +5,7 @@ import com.tallerjava.tallerjava.Compra.aplicacion.CompraInterface;
 
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 
-import com.tallerjava.tallerjava.Compra.dominio.DataTarjeta;
+import com.tallerjava.tallerjava.Compra.dominio.repositorio.DataTarjeta;
 import com.tallerjava.tallerjava.Compra.dominio.EnumEstadoCompra;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

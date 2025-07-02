@@ -1,4 +1,4 @@
-package com.tallerjava.tallerjava.Compra.dominio;
+package com.tallerjava.tallerjava.Compra.dominio.repositorio;
 
 import jakarta.persistence.Embeddable;
 
