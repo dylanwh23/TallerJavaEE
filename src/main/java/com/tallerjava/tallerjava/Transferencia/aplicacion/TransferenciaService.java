@@ -67,7 +67,7 @@ public class TransferenciaService implements TransferenciaInterfase {
                     }
                 }
             } else {
-                System.out.println("-------------- COMPRA RECHAZADA POR ERRROR"+responseCode+" --------------");
+                System.out.println("-------------- COMPRA RECHAZADA POR ERROR TRANSFERENCIA"+responseCode+" --------------");
                 nueva.setEstado(EnumEstadoTrans.RECHAZADO);
                 TransferenciaRepository.save(nueva);
                 return false;
@@ -75,7 +75,7 @@ public class TransferenciaService implements TransferenciaInterfase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? transferencia service" + e);
+            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? TRANSFERENCIA" + e);
             nueva.setEstado(EnumEstadoTrans.RECHAZADO);
             TransferenciaRepository.save(nueva);
             return false;

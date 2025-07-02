@@ -147,7 +147,7 @@ public class CompraService implements CompraInterface {
 
                 }
             } else {
-                System.out.println("-------------- COMPRA RECHAZADA POR ERROR DE RED"+responseCode+" --------------");
+                System.out.println("-------------- COMPRA RECHAZADA POR ERROR DE RED MEDIO DE PAGO"+responseCode+" --------------");
                 compra.setEstado(EnumEstadoCompra.DESAPROBADA);
                 compraRepository.save(compra);
 
@@ -155,7 +155,7 @@ public class CompraService implements CompraInterface {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / compera service--------------"+e);
+            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / compra service--------------"+e);
             compra.setEstado(EnumEstadoCompra.DESAPROBADA);
             compraRepository.save(compra);
 
