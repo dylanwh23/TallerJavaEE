@@ -29,6 +29,7 @@ public class NotificarDepositoServlet extends HttpServlet {
         String comercio = req.getParameter("comercio");
         String montoStr = req.getParameter("monto");
 
+
         resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
 
