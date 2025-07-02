@@ -32,19 +32,22 @@ public class CompraAPI {
     @Path("/pago-simple")
     @Produces(MediaType.APPLICATION_JSON)
     public Compra procesarPagoSimple(
-            @QueryParam("idComercio")    Integer idComercio,
-            @QueryParam("monto")         Double monto,
-            @QueryParam("numero")        Integer numero,
-            @QueryParam("cvv")           Integer cvv,
-            @QueryParam("propietario")   String propietario,
-            @QueryParam("vencimiento")   String vencimientoIso
+            @QueryParam("idComercio")  Integer idComercio,
+            @QueryParam("idPos")       Integer idPos,
+            @QueryParam("monto")       Double monto,
+            @QueryParam("numero")      Integer numero,
+            @QueryParam("cvv")         Integer cvv,
+            @QueryParam("propietario") String propietario,
+            @QueryParam("vencimiento") String vencimientoIso
     ) {
-        // 1) revisa que vengan todos
-        if (idComercio == null || monto == null || numero == null
-                || cvv == null || propietario == null || vencimientoIso == null) {
+        // 1) revisa que vengan todos los parámetros obligatorios
+        if (idComercio == null || idPos == null || monto == null
+                || numero == null || cvv == null
+                || propietario == null || vencimientoIso == null) {
             throw new BadRequestException("Faltan parámetros obligatorios para procesar el pago.");
         }
-        // 2) revisa formato de fecha
+
+        // 2) parsea fecha de vencimiento
         Instant inst;
         try {
             inst = Instant.parse(vencimientoIso);
@@ -52,24 +55,29 @@ public class CompraAPI {
             throw new BadRequestException("Formato de fecha inválido: " + vencimientoIso);
         }
 
-        DataTarjeta dt = new DataTarjeta( numero, cvv, Date.from(inst), propietario);
+        // 3) arma el objeto Compra
+        DataTarjeta dt = new DataTarjeta(numero, cvv, Date.from(inst), propietario);
         Compra c = new Compra();
         c.setIdComercio(idComercio);
+        c.setIdPos(idPos);
         c.setMonto(monto.intValue());
         c.setDataTarjeta(dt);
         c.setEstado(EnumEstadoCompra.PROCESANDOSE);
 
+        // 4) delega al servicio de negocio
         c = compraService.procesarPago(c);
 
+        // 5) logging sencillo
         System.out.println("-------------- COMPRA --------------");
-
         System.out.println("Id del comercio: " + c.getIdComercio());
+        System.out.println("Id del POS:      " + c.getIdPos());
         System.out.println("Monto de la compra: " + c.getMonto());
         System.out.println("Estado: " + c.getEstado());
         System.out.println("----------------------------");
 
         return c;
     }
+
 
 
     @POST

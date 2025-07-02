@@ -8,8 +8,7 @@ import java.util.Random;
 public class BancoMockServiceImpl {
 
     public String procesarDeposito(String comercio, int monto) {
-        boolean aprobado = new Random().nextDouble() < 0.75;
 
-        return aprobado ? "APROBADO" : "ERROR";
+        return "APROBADO";
     }
 }

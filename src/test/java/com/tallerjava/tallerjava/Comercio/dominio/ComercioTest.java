@@ -10,7 +10,7 @@ import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ComercioServiceTest {
+class ComerciosServiceTest {
 
     private ComercioService comercioService;
     private ComercioRepository comercioRepository;

@@ -1,6 +1,8 @@
-package com.tallerjava.tallerjava.Compra.interfase;
+package com.tallerjava.tallerjava.Compra.interfase.exceptions;
 
+import jakarta.annotation.Priority;
 import jakarta.json.bind.JsonbException;
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -8,8 +10,8 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.Map;
 
 @Provider
-public class JsonbExceptionMapper
-        implements ExceptionMapper<JsonbException> {
+@Priority(Priorities.USER)
+public class JsonbExceptionMapper implements ExceptionMapper<JsonbException> {
     @Override
     public Response toResponse(JsonbException ex) {
         Map<String,String> body = Map.of(

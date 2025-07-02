@@ -33,6 +33,8 @@ public class ComercioService implements ComercioInterface{
             throw new IllegalArgumentException("El correo ya esta utilizado");
         }else{
             comercioRepository.save(comercio);
+
+
         }
     }
 

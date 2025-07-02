@@ -1,18 +1,21 @@
 package com.tallerjava.tallerjava.Compra.infraestructura.persistencia;
 
-import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
+
+import com.tallerjava.tallerjava.Compra.dominio.Comercios;
 import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Compra.dominio.MontoActualVendido;
 import com.tallerjava.tallerjava.Compra.dominio.repositorio.CompraRepository;
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@Stateless
+@ApplicationScoped
 public class CompraRepositoryImp implements CompraRepository {
 
     @PersistenceContext(unitName = "TallerPU")
@@ -111,7 +114,7 @@ public class CompraRepositoryImp implements CompraRepository {
         try {
             em.createQuery(
                             "SELECT c FROM Compra c WHERE c.idComercio = :idComercio",
-                            Comercio.class)
+                            Comercios.class)
                     .setParameter("idComercio", idComercio)
                     .getSingleResult();
             return true;
@@ -119,6 +122,22 @@ public class CompraRepositoryImp implements CompraRepository {
             return false;
         }
     }
+
+    @Override
+    public void saveComercio(Comercios comercios) {
+        em.persist(comercios);
+    }
+
+    @Override
+    public boolean findByComercioId(int idComercio) {
+        // hacemos un native query que traiga 1 fila como máximo
+        List<?> rows = em.createNativeQuery(
+                        "SELECT id FROM compra_comercios WHERE id = :idComercio LIMIT 1")
+                .setParameter("idComercio", idComercio)
+                .getResultList();
+        return !rows.isEmpty();
+    }
+
 
 
     @Override

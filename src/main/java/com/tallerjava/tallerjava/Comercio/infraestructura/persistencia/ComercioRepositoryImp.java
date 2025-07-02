@@ -9,6 +9,9 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.List;
+import java.util.Optional;
+
 @ApplicationScoped
 public class ComercioRepositoryImp implements ComercioRepository {
     @PersistenceContext(unitName = "TallerPU")
@@ -63,6 +66,19 @@ public class ComercioRepositoryImp implements ComercioRepository {
     @Override
     public void saveReclamo(Reclamo reclamo){
         em.persist(reclamo);
+    }
+
+    @Override
+    public Optional<POS> findPOSbyComercioAndId(long idComercio, int idPos) {
+        List<POS> resultados = em.createQuery(
+                        "SELECT p FROM POS p WHERE p.comercio.id = :comId AND p.id = :posId",
+                        POS.class
+                )
+                .setParameter("comId", idComercio)
+                .setParameter("posId",  idPos)
+                .getResultList();
+
+        return resultados.stream().findFirst();
     }
 
     public void setEm(EntityManager emm) {
