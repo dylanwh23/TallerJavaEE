@@ -4,9 +4,15 @@ import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
 import com.tallerjava.tallerjava.Comercio.dominio.POS;
 import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
 import com.tallerjava.tallerjava.Comercio.dominio.repositorio.ComercioRepository;
+import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.jms.JMSContext;
+import jakarta.jms.Queue;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Stateless
@@ -15,6 +21,11 @@ public class ComercioService implements ComercioInterface{
 
     @Inject
     public ComercioRepository comercioRepository;
+
+    @Inject
+    private JMSContext jmsContext; @Resource(lookup = "java:/jms/queue/ReclamosQueue")
+    private Queue reclamosQueue;
+
 
 
     public void altaComercio(Comercio comercio) {
@@ -85,22 +96,18 @@ public class ComercioService implements ComercioInterface{
     }
 
     public void realizarReclamo(String correoComercio, String constraseñaComercio, String texto){
-        Reclamo reclamo = new Reclamo();
-
         Comercio comercio = comercioRepository.findComercioByCorreo(correoComercio,constraseñaComercio);
-
         if(comercio == null){
             throw new SecurityException("Comercio no encontrado. Intente de nuevo con los datos correctos.");
         } else if (texto.isEmpty()) {
             throw new IllegalArgumentException("No hay contenido");
         } else{
-            reclamo.setComercio(comercio);
-            reclamo.setTexto(texto);
-            reclamo.setFechaHora(java.time.LocalDateTime.now());
-            comercioRepository.saveReclamo(reclamo);
+            Map<String, Object> reclamoData = new HashMap<>();
+            reclamoData.put("correoComercio", correoComercio);
+            reclamoData.put("texto", texto);
+            reclamoData.put("contraseniaComercio", constraseñaComercio);
+            jmsContext.createProducer().send(reclamosQueue, reclamoData);
+            System.out.println("Reclamo validado y enviado a la cola para el comercio: " + comercio.getCorreo());
         }
     }
-
-
-
 }

@@ -21,7 +21,7 @@ POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/reclamo?c=info
 Content-Type: application/json
 
 {
-  "texto": "El dispositivo POS presenta errores al procesar pagos con tarjetas de crédito internacionales."
+  "texto": "El dispositivo POS presenta errores al procesar pagos con tarjetas de crédito internacionalesasdasd."
 }
 
 <> 2025-06-04T005602.200.octet-stream

@@ -1,17 +1,16 @@
 package com.tallerjava.tallerjava.Comercio.dominio;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "Comercio_Reclamo")
 public class Reclamo {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private String texto;
     private LocalDateTime fechaHora;
+    private String prioridad;
     @ManyToOne
     private Comercio comercio;
     public Reclamo(){}
@@ -30,6 +29,14 @@ public class Reclamo {
 
     public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public String getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(String prioridad) {
+        this.prioridad = prioridad;
     }
 
     public LocalDateTime getFechaHora() {

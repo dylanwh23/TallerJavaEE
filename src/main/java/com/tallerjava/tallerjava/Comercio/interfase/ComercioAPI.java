@@ -6,8 +6,11 @@ import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
+import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.jms.JMSContext;
+import jakarta.jms.Queue;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,6 +21,8 @@ import jakarta.ws.rs.core.Response;
 public class ComercioAPI {
     @Inject
     private ComercioInterface comercioService;
+
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

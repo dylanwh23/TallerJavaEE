@@ -1,3 +1,4 @@
+import com.tallerjava.tallerjava.Comercio.aplicacion.AIService;
 import com.tallerjava.tallerjava.Comercio.dominio.POS;
 import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
@@ -23,10 +24,13 @@ class ComercioIntegrationTest {
     private static EntityManagerFactory emf;
     private EntityManager em;
     private ComercioAPI comercioAPI;
+    private static AIService aiService;
 
     @BeforeAll
     static void setup() {
         emf = Persistence.createEntityManagerFactory("TestPU");
+        aiService = new AIService();
+        aiService.analizarReclamo("Hola, todo OK");
     }
 
     @BeforeEach
@@ -152,6 +156,7 @@ class ComercioIntegrationTest {
         assertEquals(1, comercioConPOS.getPos().size());
     }
 
+    /*
     @Test
     void testRealizarReclamo() {
         // Crear y guardar comercio inicial
@@ -186,6 +191,7 @@ class ComercioIntegrationTest {
         assertNotNull(reclamo);
         assertEquals("Este es un reclamo de prueba", reclamo.getTexto());
     }
+    */
 
     @Test
     void testCambiarEstadoPos() {

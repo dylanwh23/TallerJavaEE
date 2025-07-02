@@ -2,6 +2,8 @@ package com.tallerjava.tallerjava.Comercio.dominio;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.tallerjava.tallerjava.Comercio.aplicacion.AIService;
 import com.tallerjava.tallerjava.Comercio.dominio.repositorio.ComercioRepository;
 import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioService;
 
