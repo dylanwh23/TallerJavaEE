@@ -155,7 +155,7 @@ public class CompraService implements CompraInterface {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / prende el bancpo tarad--------------");
+            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / compera service--------------"+e);
             compra.setEstado(EnumEstadoCompra.DESAPROBADA);
             compraRepository.save(compra);
 
