@@ -6,7 +6,9 @@ import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
+import com.tallerjava.tallerjava.Comercio.eventos.ComercioCreadoEvent;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -19,12 +21,18 @@ public class ComercioAPI {
     @Inject
     private ComercioInterface comercioService;
 
+    @Inject
+    Event<ComercioCreadoEvent> comercioCreadoEvent;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registro")
     public Response registroComercio(@Valid Comercio comercio) {
         try {
             comercioService.altaComercio(comercio);
+            if (comercioCreadoEvent != null) {
+            comercioCreadoEvent.fire(new ComercioCreadoEvent(comercio.getId()));
+            }
             return Response.status(Response.Status.OK).entity("Registro satisfactorio.").build();
         } catch (Exception e) {
             throw new RuntimeException(e);

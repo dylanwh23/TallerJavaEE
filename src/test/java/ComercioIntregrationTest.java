@@ -18,7 +18,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ComercioIntegrationTest {
+class ComerciosIntegrationTest {
 
     private static EntityManagerFactory emf;
     private EntityManager em;

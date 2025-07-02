@@ -18,7 +18,15 @@ public class Compra {
     private EnumEstadoCompra estado;
     private Date fecha;
     private int idComercio;
+    private int idPos;
 
+    public int getIdPos() {
+        return idPos;
+    }
+
+    public void setIdPos(int idPos) {
+        this.idPos = idPos;
+    }
 
     public long getId() {
         return id;

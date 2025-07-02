@@ -1,5 +1,5 @@
-### 1. Registrar un nuevo comercio
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/registro
+### 1. Registrar un nuevo comercios
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/registro
 Content-Type: application/json
 
 {
@@ -11,13 +11,13 @@ Content-Type: application/json
 
 <> 2025-06-04T005601.500.json
 
-### 2. Agregar un POS a un comercio existente (usando QueryParams)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/agregarPOS?c=info@cafeteriaaroma.com&p=cafe123
+### 2. Agregar un POS a un comercios existente (usando QueryParams)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/agregarPOS?c=info@cafeteriaaroma.com&p=cafe123
 
 <> 2025-06-04T005601.200.octet-stream
 
 ### 3. Registrar un reclamo (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/reclamo?c=info@cafeteriaaroma.com&p=cafe123
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/reclamo?c=info@cafeteriaaroma.com&p=cafe123
 Content-Type: application/json
 
 {
@@ -26,8 +26,8 @@ Content-Type: application/json
 
 <> 2025-06-04T005602.200.octet-stream
 
-### 4. Modificar datos de un comercio (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/modificar?c=info@cafeteriaaroma.com&p=cafe123
+### 4. Modificar datos de un comercios (usando QueryParams para autenticación)
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/modificar?c=info@cafeteriaaroma.com&p=cafe123
 Content-Type: application/json
 
 {
@@ -40,11 +40,11 @@ Content-Type: application/json
 <> 2025-06-04T005602-1.200.octet-stream
 
 ### 5. Cambiar estado de un POS (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/cambiarEstadoPOS?c=contacto@cafeteriaaroma.com&p=cafe456
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/cambiarEstadoPOS?c=contacto@cafeteriaaroma.com&p=cafe456
 Content-Type: application/json
 
 {
-  "idPOS": 1,
+  "idPos": 1,
   "estado": false
 }
 

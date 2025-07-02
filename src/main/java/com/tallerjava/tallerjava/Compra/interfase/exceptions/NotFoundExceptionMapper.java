@@ -1,6 +1,8 @@
-package com.tallerjava.tallerjava.Compra.interfase;
+package com.tallerjava.tallerjava.Compra.interfase.exceptions;
 
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.ext.Provider;
 import java.util.Map;
 
 @Provider
+@Priority(Priorities.USER)
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
     @Override
     public Response toResponse(NotFoundException ex) {

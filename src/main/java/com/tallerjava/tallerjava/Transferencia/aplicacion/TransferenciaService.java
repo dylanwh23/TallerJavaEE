@@ -75,7 +75,7 @@ public class TransferenciaService implements TransferenciaInterfase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / prende el bancpo tarad--------------");
+            System.out.println("-------------- COMPRA RECHAZADA POR ERROR de red=? / prende el bancpo tarad--------------" + e);
             nueva.setEstado(EnumEstadoTrans.RECHAZADO);
             TransferenciaRepository.save(nueva);
             return false;
