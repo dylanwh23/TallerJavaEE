@@ -102,7 +102,7 @@ curl.exe -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/mont
 
 PROCESAR PAGO:
 
-curl.exe --% -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/pago-simple?idComercio=1&monto=5400&numero=1232&cvv=143&propietario=Machi&vencimiento=2025-05-30T18:43:45.000Z"
+curl.exe --% -X POST "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/pago-simple?idComercio=1&idPos=1&monto=5400&numero=1232&cvv=143&propietario=Machi&vencimiento=2025-05-30T18:43:45.000Z"
 
 
 
