@@ -119,14 +119,17 @@
 - **Micrometer/JMX → Telegraf → InfluxDB → Grafana**  
 - Métricas de latencia y throughput:
 
-  - **Endpoints Comercio (latencia ms):**  
-    ![Latencia Comercio](https://github.com/user-attachments/assets/96c27f12-a512-4875-88cb-c6260b8764a6)
+- Esta gráfica muestra cada llamada a los endpoint de Comercio y muestra la latencia de las mismas expresada en milisegundos.
+    ![Captura de pantalla 2025-07-03 031614](https://github.com/user-attachments/assets/96c27f12-a512-4875-88cb-c6260b8764a6)
 
-  - **Throughput Compras:**  
-    ![Throughput Compras](https://github.com/user-attachments/assets/9d65bcb3-f1b4-45d1-9cdd-aca10fb6fc5e)
+  - Lo mismo que con Comercio.
+    ![Captura de pantalla 2025-07-03 031626](https://github.com/user-attachments/assets/9d65bcb3-f1b4-45d1-9cdd-aca10fb6fc5a)
 
-  - **Recursos Docker (CPU/Memoria):**  
-    ![Recursos Docker](https://github.com/user-attachments/assets/4dbaa30e-ac2d-4330-b1ca-5daaf070a3e9)
+  - Lo mismo que con Comercio.
+    ![Captura de pantalla 2025-07-03 031641](https://github.com/user-attachments/assets/7cc6ef31-4644-45ed-b1a6-c2d218e1bc5e)
+
+  - Son las gráficas de uso de recursos del Servidor, como están dentro del contenedor Docker solo refleja el consumo de este, estás están proveídas por Telegraf.
+    ![Captura de pantalla 2025-07-03 031651](https://github.com/user-attachments/assets/4dbaa30e-ac2d-4330-b1ca-5daaf070a3e9)
 
 ---
 
