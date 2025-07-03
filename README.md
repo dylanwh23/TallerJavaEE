@@ -95,18 +95,22 @@
 
 ## Funcionalidades
 
-### Rate Limiter
+- Rate Limiter
+  - El Rate Limiter funciona para limitar la cantidad de registros de pagos en el sistema para que no se sobrecargue, el rate limiter implementado es de tipo Leaky token que funciona de la siguiente manera:
+    
+    - Partimos de un balde vacío pero con un límite de tokens.
 
-El Rate Limiter (Leaky Bucket) funciona así:
+    - Cada vez que llega un request, ponemos un token en el balde. (cola de mensajes)
 
-1. Balde vacío con límite de tokens.  
-2. Cada petición añade un token al balde.  
-3. Las peticiones se procesan a ritmo constante (una gota a la vez).  
-4. Si el balde se llena, nuevas peticiones se rechazan.  
-5. Garantiza procesamiento secuencial y evita sobrecarga.  
+    - El request no se procesa inmediatamente sino que lo hace a ritmos preestablecidos (como una gota que cae de un balde)
 
-**Prueba en JMeter (rechazo de peticiones excesivas):**  
-![Rate Limiter JMeter](https://github.com/user-attachments/assets/ef7d5b5a-eefb-4c75-9a7a-2f8fd665018e)
+    - Cuando el balde se llena los request, se rechazan.
+
+    - Los request que entran al balde, se ejecutan de forma secuencial.
+   
+      
+  - Aqui se ve como trabaja el rate limiter con esta prueba JMeter, se cancelan una porción de las consultas enviadas a fuerza bruta.   
+    ![Captura de pantalla 2025-07-03 030904](https://github.com/user-attachments/assets/ef7d5b5a-eefb-4c75-9a7a-2f8fd665018e)
 
 ---
 
