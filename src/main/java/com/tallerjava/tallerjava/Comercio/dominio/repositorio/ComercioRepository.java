@@ -15,4 +15,4 @@ public interface ComercioRepository {
     void mergePos(POS pos);
     void saveReclamo(Reclamo reclamo);
     Optional<POS> findPOSbyComercioAndId(long idComercio, int idPos);
-}
+    }

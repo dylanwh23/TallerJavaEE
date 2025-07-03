@@ -2,12 +2,14 @@ package com.tallerjava.tallerjava.Comercio.interfase;
 
 import com.tallerjava.tallerjava.Comercio.aplicacion.ComercioInterface;
 import com.tallerjava.tallerjava.Comercio.dominio.Comercio;
+import com.tallerjava.tallerjava.Comercio.eventos.ComercioCreadoEvent;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.AuthRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ModificarComercioRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.ReclamoRequest;
 import com.tallerjava.tallerjava.Comercio.interfase.Requests.cambiarEstadoPosRequest;
 import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.jms.JMSContext;
 import jakarta.jms.Queue;
@@ -24,12 +26,18 @@ public class ComercioAPI {
 
 
 
+    @Inject
+    Event<ComercioCreadoEvent> comercioCreadoEvent;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registro")
     public Response registroComercio(@Valid Comercio comercio) {
         try {
             comercioService.altaComercio(comercio);
+            if (comercioCreadoEvent != null) {
+                comercioCreadoEvent.fire(new ComercioCreadoEvent(comercio.getId()));
+            }
             return Response.status(Response.Status.OK).entity("Registro satisfactorio.").build();
         } catch (Exception e) {
             throw new RuntimeException(e);

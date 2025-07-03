@@ -5,6 +5,7 @@ import com.tallerjava.tallerjava.Comercio.dominio.Reclamo;
 import com.tallerjava.tallerjava.Comercio.dominio.repositorio.ComercioRepository;
 import jakarta.ejb.ActivationConfigProperty;
 import jakarta.ejb.MessageDriven;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.jms.JMSException;
 import jakarta.jms.MapMessage;
@@ -20,6 +21,7 @@ import com.google.gson.JsonParser;
                 @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue")
         }
 )
+@ApplicationScoped
 public class ReclamoMDB implements MessageListener
 {
     @Inject

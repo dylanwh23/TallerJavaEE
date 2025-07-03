@@ -20,7 +20,7 @@ public class Comercio {
     private String correo;
     @NotEmpty
     private String contrasenia;
-    @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<POS> pos = new ArrayList<>();
     public Comercio() {}
 
@@ -62,9 +62,6 @@ public class Comercio {
 
     public void setContrasenia(String contrasenia) {
         this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt());
-    }
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public List<POS> getPos() {
