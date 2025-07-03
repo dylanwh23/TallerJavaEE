@@ -149,9 +149,32 @@ Implementacion de Pasarela de Pagos
 # Endpoints
 
 
+| Operación             | Método | Consumes           | Parámetros / Body                                                        | Respuesta                                                     |
+| --------------------- | :----: | ------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Registrar comercio    |  POST  | `application/json` | `{ "nombre","correo","telefono","contrasenia" }`                         | `200 OK`<br>`"Registro satisfactorio."`                       |
+| Agregar POS           |  POST  | Form params        | `correo=p&contr=...`                                                     | `200 OK`<br>`"POS agregado satisfactoriamente."`              |
+| Realizar reclamo      |  POST  | `application/json` | `AuthRequest + { "texto": "..." }`                                       | `200 OK`<br>`"Reclamo realizado satisfactoriamente."`         |
+| Modificar comercio    |  POST  | `application/json` | `AuthRequest + { "nombre","telefono","nuevoCorreo","nuevaContrasenia" }` | `200 OK`<br>`"Datos modificados satisfactoriamente."`         |
+| Cambiar estado de POS |  POST  | `application/json` | `AuthRequest + { "idPOS", "estado" }`                                    | `200 OK`<br>`"Estado del POS modificado satisfactoriamente."` |
+
+| Operación            | Método | Consumes           | Parámetros / Body                                                                     | Respuesta                                     |
+| -------------------- | :----: | ------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Pago simple          |  POST  | Query-string       | `?idComercio=&idPos=&monto=&numero=&cvv=&propietario=&vencimiento=`                   | `200 OK`<br>`Compra` JSON                     |
+| Pago (JSON)          |  POST  | `application/json` | `{ "idComercio","idPos","monto","dataTarjeta":{numero,cvv,vencimiento,propietario} }` | `201 Created`<br>`Compra` JSON                |
+| Ventas diarias       |   GET  | `application/json` | `?idComercio=`                                                                        | `200 OK`<br>`[Compra,…]`                      |
+| Ventas por periodo   |   GET  | `application/json` | `?idComercio=&desde=YYYY-MM-DD&hasta=YYYY-MM-DD`                                      | `200 OK`<br>`[Compra,…]`                      |
+| Monto actual vendido |   GET  | `application/json` | `?idComercio=`                                                                        | `200 OK`<br>`{ "montoActualVendido": float }` |
+
+| Operación          | Método | Produces           | Parámetros                                       | Respuesta                       |
+| ------------------ | :----: | ------------------ | ------------------------------------------------ | ------------------------------- |
+| Ventas por periodo |   GET  | `application/json` | `?idComercio=&desde=YYYY-MM-DD&hasta=YYYY-MM-DD` | `200 OK`<br>`[Transferencia,…]` |
+
+
+
+
+
+
 VENTAS DIARIAS:
-
-
 
 
 curl.exe -X GET "http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/ventasDiarias?idComercio=1"
