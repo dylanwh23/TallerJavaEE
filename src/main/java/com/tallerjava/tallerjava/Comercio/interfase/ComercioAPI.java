@@ -39,8 +39,8 @@ public class ComercioAPI {
                 comercioCreadoEvent.fire(new ComercioCreadoEvent(comercio.getId()));
             }
             return Response.status(Response.Status.OK).entity("Registro satisfactorio.").build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Registro fallido, correo ya utilizado").build();
         }
     }
 
@@ -51,7 +51,7 @@ public class ComercioAPI {
             comercioService.agregarPos(auth.getCorreo(), auth.getContrasenia());
             return Response.status(Response.Status.OK).entity("POS agregado satisfactoriamente.").build();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("POS agregado fallido, verifique los campos").build();
         }
     }
 
@@ -63,7 +63,7 @@ public class ComercioAPI {
             comercioService.realizarReclamo(auth.getCorreo(), auth.getContrasenia(), request.getTexto());
             return Response.status(Response.Status.OK).entity("Reclamo realizado satisfactoriamente.").build();
         }catch (Exception e){
-            throw new RuntimeException(e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Reclamo fallido, verifique los campos").build();
         }
     }
 
@@ -82,7 +82,7 @@ public class ComercioAPI {
             );
             return Response.status(Response.Status.OK).entity("Datos modificados satisfactoriamente.").build();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Datos modificados fallidos, verifique los campos").build();
         }
     }
 
@@ -94,7 +94,7 @@ public class ComercioAPI {
             comercioService.cambiarEstadoPOS(auth.getCorreo(), auth.getContrasenia(), request.getIdPOS(), request.isEstado());
             return Response.status(Response.Status.OK).entity("Estado del POS modificado satisfactoriamente.").build();
         }catch (Exception e){
-            throw new RuntimeException(e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Estado del POS modificado fallido, verifique los campos").build();
         }
     }
 

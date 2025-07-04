@@ -1,11 +1,14 @@
 package com.tallerjava.tallerjava.Transferencia.aplicacion;
 
 
+import com.tallerjava.tallerjava.Compra.dominio.Compra;
 import com.tallerjava.tallerjava.Transferencia.dominio.EnumEstadoTrans;
 import com.tallerjava.tallerjava.Transferencia.dominio.Transferencia;
 import com.tallerjava.tallerjava.Transferencia.dominio.repositorio.TransferenciaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +34,8 @@ public class TransferenciaService implements TransferenciaInterfase {
         nueva.setEstado(EnumEstadoTrans.PROCESANDO);
         nueva.setFechaHora(LocalDateTime.now());
         nueva.setIdComercio(idComercio);
+
+
 
         TransferenciaRepository.save(nueva);
 
@@ -83,6 +88,25 @@ public class TransferenciaService implements TransferenciaInterfase {
     }
 
     public List<Transferencia> consultarDepositos(int idComercio, LocalDateTime fInicial, LocalDateTime fFinal){
+        if (idComercio <= 0) {
+            throw new BadRequestException("El identificador del comercio es inválido.");
+        }
+        if (fInicial == null || fFinal == null) {
+            throw new BadRequestException("Las fechas de inicio y fin son obligatorias.");
+        }
+        if (fInicial.isAfter(fFinal)) {
+            throw new BadRequestException("La fecha de inicio debe ser anterior o igual a la fecha de fin.");
+        }
+        List<Transferencia> ventas = TransferenciaRepository.ventasPeriodo(idComercio, fInicial, fFinal);
+
+        if (ventas.isEmpty()) {
+            throw new NotFoundException(
+                    String.format(
+                            "No se encontraron transferencias para el comercio %d entre %tF y %tF.",
+                            idComercio, fInicial, fFinal
+                    )
+            );
+        }
         return TransferenciaRepository.ventasPeriodo(idComercio,fInicial,fFinal);
     }
 }

@@ -5,50 +5,54 @@ Content-Type: application/json
 {
   "nombre": "Cafetería Aroma",
   "telefono": "099123456",
-  "correo": "fede@cafeteriaaroma.com",
+  "correo": "gabriel@cafeteriaaroma.com",
   "contrasenia": "cafe123"
 }
 
 <> 2025-06-04T005601.500.json
 
 ### 2. Agregar un POS a un comercios existente (usando QueryParams)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/agregarPOS?c=fede@cafeteriaaroma.com&p=cafe123
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/agregarPOS?c=gabriel@cafeteriaaroma.com&p=cafe123
 
 <> 2025-06-04T005601.200.octet-stream
 
 ### 3. Registrar un reclamo (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/reclamo?c=info@cafeteriaaroma.com&p=cafe123
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/reclamo?c=fede@cafeteriaaroma.com&p=cafe123
 Content-Type: application/json
 
 {
-  "texto": "El dispositivo POS presenta errores al procesar pagos con tarjetas de crédito internacionalesasdasd."
+  "texto": "Anda todo ok"
 }
 
 <> 2025-06-04T005602.200.octet-stream
 
 ### 4. Modificar datos de un comercios (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercios/modificar?c=info@cafeteriaaroma.com&p=cafe123
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/modificar?c=fede@cafeteriaaroma.com&p=cafe123
 Content-Type: application/json
 
 {
   "nombre": "Cafetería Aroma Premium",
   "telefono": "099123457",
-  "nuevoCorreo": "contacto@cafeteriaaroma.com",
+  "nuevoCorreo": "matias@cafeteriaaroma.com",
   "nuevaContrasenia": "cafe456"
 }
 
 <> 2025-06-04T005602-1.200.octet-stream
 
 ### 5. Cambiar estado de un POS (usando QueryParams para autenticación)
-POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/cambiarEstadoPOS?c=fede@cafeteriaaroma.com&p=cafe123
+POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/comercio/cambiarEstadoPOS?c=matias@cafeteriaaroma.com&p=cafe456
 Content-Type: application/json
 
 {
-  "idPOS": 3,
-  "estado": false
+  "idPOS": 1,
+  "estado": true
 }
 
 <> 2025-06-04T005602-2.200.octet-stream
 
 ###
 POST http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/compra/pago-simple?idComercio=1&idPos=1&monto=5400&numero=1232&cvv=143&propietario=Machi&vencimiento=2025-07-30T18:43:45.000Z
+
+###
+
+GET http://localhost:8080/TallerJavaEE-1.0-SNAPSHOT/api/transferencia/ventasPeriodo?idComercio=3&desde=2025-05-01&hasta=2025-07-23

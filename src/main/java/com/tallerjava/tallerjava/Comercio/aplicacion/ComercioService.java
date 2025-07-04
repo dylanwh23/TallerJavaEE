@@ -28,13 +28,11 @@ public class ComercioService implements ComercioInterface{
 
 
 
-    public void altaComercio(Comercio comercio) {
+    public void altaComercio(Comercio comercio){
         if(comercioRepository.existeComercio(comercio.getCorreo())){
             throw new IllegalArgumentException("El correo ya esta utilizado");
         }else{
             comercioRepository.save(comercio);
-
-
         }
     }
 
